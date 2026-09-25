@@ -14,7 +14,9 @@ internal class ConferenceRoomService : IConferenceRoomService
         _dbContext = dbContext;
     }
     
-    public async Task<CreateConferenceRoomResult> CreateRoomAsync(CreateConferenceRoomRequest request)
+    public async Task<CreateConferenceRoomResult> CreateRoomAsync(
+        CreateConferenceRoomRequest request,
+        CancellationToken cancellationToken = default)
     {
         var requestedServiceIds =
             request.AvailableServiceIds.Distinct().ToList();
@@ -22,7 +24,7 @@ internal class ConferenceRoomService : IConferenceRoomService
         var services = await _dbContext.RoomServices
             .Where(service =>
                 requestedServiceIds.Contains(service.Id))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         if (services.Count != requestedServiceIds.Count)
         {
@@ -36,16 +38,19 @@ internal class ConferenceRoomService : IConferenceRoomService
             services);
 
         _dbContext.ConferenceRooms.Add(room);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         return CreateConferenceRoomResult.Success(room);
     }
 
-    public async Task<ConferenceRoomResultType> UpdateRoomAsync(int id, UpdateConferenceRoomRequest request)
+    public async Task<ConferenceRoomResultType> UpdateRoomAsync(
+        int id,
+        UpdateConferenceRoomRequest request,
+        CancellationToken cancellationToken = default)
     {
         var room = await _dbContext.ConferenceRooms
             .Include(room => room.AvailableServices)
-            .FirstOrDefaultAsync(room => room.Id == id);
+            .FirstOrDefaultAsync(room => room.Id == id, cancellationToken);
         
         if (room is null)
         {
@@ -75,7 +80,7 @@ internal class ConferenceRoomService : IConferenceRoomService
         
             var services = await _dbContext.RoomServices
                 .Where(service => requestedServiceIds.Contains(service.Id))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         
             if (services.Count != requestedServiceIds.Count)
             {
@@ -100,14 +105,16 @@ internal class ConferenceRoomService : IConferenceRoomService
             }
            
         }
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
         return ConferenceRoomResultType.Success;
     }
 
-    public async Task<ConferenceRoomResultType> DeleteRoomAsync(int id)
+    public async Task<ConferenceRoomResultType> DeleteRoomAsync(
+        int id,
+        CancellationToken cancellationToken = default)
     {
         var room = await _dbContext.ConferenceRooms
-            .FirstOrDefaultAsync(room => room.Id == id);
+            .FirstOrDefaultAsync(room => room.Id == id, cancellationToken);
 
         if (room is null)
         {
@@ -115,7 +122,7 @@ internal class ConferenceRoomService : IConferenceRoomService
         }
 
         var hasBookings = await _dbContext.Bookings
-            .AnyAsync(booking => booking.RoomId == id);
+            .AnyAsync(booking => booking.RoomId == id, cancellationToken);
 
         if (hasBookings)
         {
@@ -124,12 +131,14 @@ internal class ConferenceRoomService : IConferenceRoomService
 
         _dbContext.ConferenceRooms.Remove(room);
 
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return ConferenceRoomResultType.Success;
     }
 
-    public async Task<IReadOnlyCollection<AvailableConferenceRoomResponse>> GetAvailableRoomsAsync(SearchAvailableRoomsRequest request)
+    public async Task<IReadOnlyCollection<AvailableConferenceRoomResponse>> GetAvailableRoomsAsync(
+        SearchAvailableRoomsRequest request,
+        CancellationToken cancellationToken = default)
     {
         var rooms = await _dbContext.ConferenceRooms
             .Where(room => room.Capacity >= request.Capacity)
@@ -139,7 +148,7 @@ internal class ConferenceRoomService : IConferenceRoomService
                 booking.EndTime > request.StartTime))
             .Include(room => room.AvailableServices)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var responses = new List<AvailableConferenceRoomResponse>(rooms.Count);
 

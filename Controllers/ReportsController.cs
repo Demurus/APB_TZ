@@ -14,31 +14,45 @@ public class ReportsController : ControllerBase
         _reportService = reportService;
     }
 
+    /// <summary>
+    /// Returns total booking count and income for a selected period
+    /// </summary>
     [HttpGet("income")]
     public async Task<IActionResult> GetIncome(
         [FromQuery] DateTime startDate,
-        [FromQuery] DateTime endDate)
+        [FromQuery] DateTime endDate,
+        CancellationToken cancellationToken)
     {
         if (endDate <= startDate)
         {
             return BadRequest("End date must be later than start date.");
         }
 
-        var report = await _reportService.GetIncomeAsync(startDate, endDate);
+        var report = await _reportService.GetIncomeAsync(
+            startDate,
+            endDate,
+            cancellationToken);
         return Ok(report);
     }
     
+    /// <summary>
+    /// Returns usage statistics for every conference room in a selected period
+    /// </summary>
     [HttpGet("room-usage")]
     public async Task<IActionResult> GetRoomUsage(
         [FromQuery] DateTime startDate,
-        [FromQuery] DateTime endDate)
+        [FromQuery] DateTime endDate,
+        CancellationToken cancellationToken)
     {
         if (endDate <= startDate)
         {
             return BadRequest("End date must be later than start date.");
         }
 
-        var report = await _reportService.GetRoomUsageAsync(startDate, endDate);
+        var report = await _reportService.GetRoomUsageAsync(
+            startDate,
+            endDate,
+            cancellationToken);
 
         return Ok(report);
     }

@@ -15,10 +15,17 @@ public class ConferenceRoomsController : ControllerBase
         _conferenceRoomService = conferenceRoomService;
     }
     
+    /// <summary>
+    /// Creates a conference room and assigns catalog services available in this room.
+    /// </summary>
     [HttpPost]
-    public async Task<IActionResult> CreateRoom(CreateConferenceRoomRequest request)
+    public async Task<IActionResult> CreateRoom(
+        CreateConferenceRoomRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await _conferenceRoomService.CreateRoomAsync(request);
+        var result = await _conferenceRoomService.CreateRoomAsync(
+            request,
+            cancellationToken);
         
         switch (result.Type)
         {
@@ -43,12 +50,19 @@ public class ConferenceRoomsController : ControllerBase
         }
     }
     
+    /// <summary>
+    /// Updates conference room details and optionally replaces available service IDs.
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateRoom(
         int id,
-        UpdateConferenceRoomRequest request)
+        UpdateConferenceRoomRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await _conferenceRoomService.UpdateRoomAsync(id, request);
+        var result = await _conferenceRoomService.UpdateRoomAsync(
+            id,
+            request,
+            cancellationToken);
 
         switch (result)
         {
@@ -63,10 +77,17 @@ public class ConferenceRoomsController : ControllerBase
         }
     }
     
+    /// <summary>
+    /// Deletes a conference room if it has no booking history.
+    /// </summary>
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteRoom(int id)
+    public async Task<IActionResult> DeleteRoom(
+        int id,
+        CancellationToken cancellationToken)
     {
-        var result = await _conferenceRoomService.DeleteRoomAsync(id);
+        var result = await _conferenceRoomService.DeleteRoomAsync(
+            id,
+            cancellationToken);
 
         switch (result)
         {
@@ -81,9 +102,13 @@ public class ConferenceRoomsController : ControllerBase
         }
     }
     
+    /// <summary>
+    /// Returns rooms that match the requested capacity and are free for the selected time interval.
+    /// </summary>
     [HttpGet("available")]
     public async Task<IActionResult> GetAvailableRooms(
-        [FromQuery] SearchAvailableRoomsRequest request)
+        [FromQuery] SearchAvailableRoomsRequest request,
+        CancellationToken cancellationToken)
     {
         if (request.Capacity <= 0)
         {
@@ -95,7 +120,9 @@ public class ConferenceRoomsController : ControllerBase
             return BadRequest("End time must be later than start time.");
         }
 
-        var result = await _conferenceRoomService.GetAvailableRoomsAsync(request);
+        var result = await _conferenceRoomService.GetAvailableRoomsAsync(
+            request,
+            cancellationToken);
         return Ok(result);
     }
 }

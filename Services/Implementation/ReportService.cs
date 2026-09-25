@@ -13,14 +13,17 @@ public class ReportService : IReportService
         _dbContext = dbContext;
     }
 
-    public async Task<IncomeReportResponse> GetIncomeAsync(DateTime startDate, DateTime endDate)
+    public async Task<IncomeReportResponse> GetIncomeAsync(
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken = default)
     {
         var prices = await _dbContext.Bookings
             .Where(booking =>
                 booking.StartTime >= startDate &&
                 booking.StartTime < endDate)
             .Select(booking => booking.TotalPrice)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return new IncomeReportResponse
         {
@@ -33,7 +36,8 @@ public class ReportService : IReportService
 
     public async Task<IReadOnlyCollection<RoomUsageReportResponse>> GetRoomUsageAsync(
         DateTime startDate,
-        DateTime endDate)
+        DateTime endDate,
+        CancellationToken cancellationToken = default)
     {
         var rooms = await _dbContext.ConferenceRooms
             .AsNoTracking()
@@ -42,7 +46,7 @@ public class ReportService : IReportService
                 room.Id,
                 room.Name
             })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var bookings = await _dbContext.Bookings
             .AsNoTracking()
@@ -56,7 +60,7 @@ public class ReportService : IReportService
                 booking.EndTime,
                 booking.TotalPrice
             })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var bookingsByRoom = bookings
             .GroupBy(booking => booking.RoomId)

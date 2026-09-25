@@ -1,3 +1,4 @@
+using System.Reflection;
 using IlliaUlianych_APB_TZ.Data;
 using IlliaUlianych_APB_TZ.ExceptionsHandler;
 using IlliaUlianych_APB_TZ.Services;
@@ -10,7 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFileName =
+        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlFilePath =
+        Path.Combine(AppContext.BaseDirectory, xmlFileName);
+
+    options.IncludeXmlComments(xmlFilePath);
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

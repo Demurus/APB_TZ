@@ -5,12 +5,12 @@ namespace IlliaUlianych_APB_TZ.DTO.Rooms;
 public class CreateConferenceRoomRequest
 {
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     
-    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue)]
     public int Capacity { get; set; }
     
-    [System.ComponentModel.DataAnnotations.Range(0, double.MaxValue)]
+    [Range(0, double.MaxValue)]
     public decimal BaseHourPrice { get; set; }
     public List<int> AvailableServiceIds { get; set; } = new();
 }

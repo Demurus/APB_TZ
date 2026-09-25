@@ -4,6 +4,8 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,8 +17,10 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
-<ItemGroup>
-    <Compile Remove="IlliaUlianych_APB_TZ.Tests/**/*.cs" />
-</ItemGroup>
+    <ItemGroup>
+        <Compile Remove="IlliaUlianych_APB_TZ.Tests/**/*.cs" />
+        <Content Remove="IlliaUlianych_APB_TZ.Tests/**/*" />
+        <None Remove="IlliaUlianych_APB_TZ.Tests/**/*" />
+    </ItemGroup>
 
 </Project>

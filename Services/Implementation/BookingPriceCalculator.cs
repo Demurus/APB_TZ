@@ -91,7 +91,7 @@ public static class BookingPriceCalculator
 
 internal class BookingPriceModifierRule
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public int StartHour { get; set; }
     public int EndHour { get; set; }
     public decimal DiscountPercentage { get; set; }

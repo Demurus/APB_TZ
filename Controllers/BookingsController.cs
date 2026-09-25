@@ -15,8 +15,13 @@ public class BookingsController : ControllerBase
         _bookingService = bookingService;
     }
 
+    /// <summary>
+    /// Books a conference room and returns the calculated final price.
+    /// </summary>
     [HttpPost]
-    public async Task<IActionResult> BookConferenceRoomAsync(CreateBookingRequest request)
+    public async Task<IActionResult> BookConferenceRoomAsync(
+        CreateBookingRequest request,
+        CancellationToken cancellationToken)
     {
         if (request.DurationMinutes <= 0)
         {
@@ -24,7 +29,9 @@ public class BookingsController : ControllerBase
                 "Booking duration must be greater than zero.");
         }
         
-        var booking = await _bookingService.BookConferenceRoomAsync(request);
+        var booking = await _bookingService.BookConferenceRoomAsync(
+            request,
+            cancellationToken);
 
         switch (booking.Type)
         {

@@ -15,7 +15,8 @@ internal class BookingService : IBookingService
     }
     
     public async Task<CreateBookingResult> BookConferenceRoomAsync(
-        CreateBookingRequest request)
+        CreateBookingRequest request,
+        CancellationToken cancellationToken = default)
     {
         var duration =
             TimeSpan.FromMinutes(request.DurationMinutes);
@@ -26,7 +27,8 @@ internal class BookingService : IBookingService
         var room = await _dbContext.ConferenceRooms
             .Include(room => room.AvailableServices)
             .FirstOrDefaultAsync(room =>
-                room.Id == request.RoomId);
+                room.Id == request.RoomId,
+                cancellationToken);
 
         if (room is null)
         {
@@ -51,7 +53,8 @@ internal class BookingService : IBookingService
             .AnyAsync(booking =>
                 booking.RoomId == room.Id &&
                 booking.StartTime < endTime &&
-                booking.EndTime > request.StartTime);
+                booking.EndTime > request.StartTime,
+                cancellationToken);
 
         if (hasOverlap)
         {
@@ -74,7 +77,7 @@ internal class BookingService : IBookingService
 
         _dbContext.Bookings.Add(booking);
 
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return CreateBookingResult.Success(booking);
     }
