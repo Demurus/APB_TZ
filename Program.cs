@@ -1,4 +1,5 @@
 using IlliaUlianych_APB_TZ.Data;
+using IlliaUlianych_APB_TZ.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 
