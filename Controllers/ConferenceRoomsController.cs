@@ -144,4 +144,55 @@ public class ConferenceRoomsController : ControllerBase
 
         return NoContent();
     }
+    
+    [HttpGet("available")]
+    public async Task<IActionResult> GetAvailableRooms(
+        [FromQuery] SearchAvailableRoomsRequest request)
+    {
+        if (request.Capacity <= 0)
+        {
+            return BadRequest("Capacity must be greater than zero.");
+        }
+
+        if (request.EndTime <= request.StartTime)
+        {
+            return BadRequest("End time must be later than start time.");
+        }
+
+        var rooms = await _dbContext.ConferenceRooms
+            .Where(room => room.Capacity >= request.Capacity)
+            .Where(room => !_dbContext.Bookings.Any(booking =>
+                booking.RoomId == room.Id &&
+                booking.StartTime < request.EndTime &&
+                booking.EndTime > request.StartTime))
+            .Include(room => room.AvailableServices)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var responses =
+            new List<AvailableConferenceRoomResponse>(rooms.Count);
+
+        foreach (var conferenceRoom in rooms)
+        {
+            var availableServicesIds = new List<int>();
+
+            foreach (var roomService in conferenceRoom.AvailableServices)
+            {
+                availableServicesIds.Add(roomService.Id);
+            }
+
+            var response = new AvailableConferenceRoomResponse
+            {
+                Id = conferenceRoom.Id,
+                Name = conferenceRoom.Name,
+                Capacity = conferenceRoom.Capacity,
+                BaseHourPrice = conferenceRoom.BaseHourPrice,
+                AvailableServices = availableServicesIds
+            };
+
+            responses.Add(response);
+        }
+
+        return Ok(responses);
+    }
 }
