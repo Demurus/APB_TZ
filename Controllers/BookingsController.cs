@@ -1,5 +1,4 @@
-﻿using IlliaUlianych_APB_TZ.Data.BookingData;
-using IlliaUlianych_APB_TZ.DTO.Rooms;
+﻿using IlliaUlianych_APB_TZ.DTO.Bookings;
 using IlliaUlianych_APB_TZ.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +16,7 @@ public class BookingsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> BookConferenceRoom(
-        CreateBookingRequest request)
+    public async Task<IActionResult> BookConferenceRoomAsync(CreateBookingRequest request)
     {
         if (request.DurationMinutes <= 0)
         {
@@ -26,7 +24,7 @@ public class BookingsController : ControllerBase
                 "Booking duration must be greater than zero.");
         }
         
-        var booking = await _bookingService.BookConferenceRoom(request);
+        var booking = await _bookingService.BookConferenceRoomAsync(request);
 
         switch (booking.Type)
         {

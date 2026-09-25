@@ -1,9 +1,8 @@
-﻿using IlliaUlianych_APB_TZ.Data.BookingData;
-using IlliaUlianych_APB_TZ.DTO.Rooms;
+﻿using IlliaUlianych_APB_TZ.DTO.Bookings;
 
 namespace IlliaUlianych_APB_TZ.Services;
 
 public interface IBookingService
 {
-    Task<CreateBookingResult> BookConferenceRoom(CreateBookingRequest request);
+    Task<CreateBookingResult> BookConferenceRoomAsync(CreateBookingRequest request);
 }

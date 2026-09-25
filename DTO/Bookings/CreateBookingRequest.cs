@@ -1,4 +1,4 @@
-﻿namespace IlliaUlianych_APB_TZ.DTO.Rooms;
+﻿namespace IlliaUlianych_APB_TZ.DTO.Bookings;
 
 public class CreateBookingRequest
 {

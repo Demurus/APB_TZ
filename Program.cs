@@ -17,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IConferenceRoomService, ConferenceRoomService>();
 
 var app = builder.Build();
 

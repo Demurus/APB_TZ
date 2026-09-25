@@ -1,6 +1,6 @@
 ﻿using IlliaUlianych_APB_TZ.Entities;
 
-namespace IlliaUlianych_APB_TZ.Data.BookingData;
+namespace IlliaUlianych_APB_TZ.DTO.Bookings;
 
 public class CreateBookingResult
 {

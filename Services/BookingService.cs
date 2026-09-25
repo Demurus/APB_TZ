@@ -1,6 +1,5 @@
 ﻿using IlliaUlianych_APB_TZ.Data;
-using IlliaUlianych_APB_TZ.Data.BookingData;
-using IlliaUlianych_APB_TZ.DTO.Rooms;
+using IlliaUlianych_APB_TZ.DTO.Bookings;
 using IlliaUlianych_APB_TZ.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +14,7 @@ internal class BookingService : IBookingService
         _dbContext = dbContext;
     }
     
-    public async Task<CreateBookingResult> BookConferenceRoom(
+    public async Task<CreateBookingResult> BookConferenceRoomAsync(
         CreateBookingRequest request)
     {
         var duration =
