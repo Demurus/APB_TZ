@@ -1,0 +1,6 @@
+@IlliaUlianych_APB_TZ_HostAddress = http://localhost:5125
+
+GET {{IlliaUlianych_APB_TZ_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
