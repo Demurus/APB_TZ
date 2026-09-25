@@ -12,7 +12,11 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.31" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
+
+<ItemGroup>
+    <Compile Remove="IlliaUlianych_APB_TZ.Tests/**/*.cs" />
+</ItemGroup>
 
 </Project>

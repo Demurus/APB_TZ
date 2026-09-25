@@ -7,10 +7,10 @@ public class CreateConferenceRoomRequest
     [Required]
     public string Name { get; set; }
     
-    [Range(1, int.MaxValue)]
+    [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
     public int Capacity { get; set; }
     
-    [Range(0, double.MaxValue)]
+    [System.ComponentModel.DataAnnotations.Range(0, double.MaxValue)]
     public decimal BaseHourPrice { get; set; }
     public List<int> AvailableServiceIds { get; set; } = new();
 }

@@ -1,4 +1,5 @@
 using IlliaUlianych_APB_TZ.Data;
+using IlliaUlianych_APB_TZ.ExceptionsHandler;
 using IlliaUlianych_APB_TZ.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IConferenceRoomService, ConferenceRoomService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
